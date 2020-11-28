@@ -1,0 +1,1 @@
+insert into users (email, password, username)values('bautistaj20@outlook.com', 'Password: $2a$10$SJkoETvMsN.TAEkBuEuxxuDtKQGsvtlFM.mZcCnGO8Q/qlw1qPCfq','bautistaj');

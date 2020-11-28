@@ -52,7 +52,7 @@ public class FormController {
 		
 		if(this.formService.findById(id).isPresent()) {
 			
-			LOGGER.debug(MessageFormat.format("Deleting brand with id {0}", id));
+			LOGGER.debug(MessageFormat.format("Deleting form with id {0}", id));
 			this.formService.deleteById(id);
 			
 		} else {
