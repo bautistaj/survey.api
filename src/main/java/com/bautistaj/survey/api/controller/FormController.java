@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bautistaj.survey.api.model.Survey;
-import com.bautistaj.survey.api.model.User;
 import com.bautistaj.survey.api.service.IFormService;
 
 @RestController
