@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.bautistaj.survey.api.model.Form;
+import com.bautistaj.survey.api.model.Survey;
 import com.bautistaj.survey.api.repository.IFormRepository;
 import com.bautistaj.survey.api.service.IFormService;
 
@@ -17,12 +17,12 @@ public class FormService implements IFormService {
 	private IFormRepository formRepository;
 	
 	@Override
-	public Page<Form> findAll(Pageable pageable) {
+	public Page<Survey> findAll(Pageable pageable) {
 		return this.formRepository.findAll(pageable);
 	}
 
 	@Override
-	public Optional<Form> findById(Long id) {
+	public Optional<Survey> findById(Long id) {
 		return this.formRepository.findById(id);
 	}
 
@@ -32,12 +32,12 @@ public class FormService implements IFormService {
 	}
 
 	@Override
-	public Form update(Form form) {
+	public Survey update(Survey form) {
 		return this.formRepository.save(form);
 	}
 
 	@Override
-	public Form create(Form form) {
+	public Survey create(Survey form) {
 		return this.formRepository.save(form);
 	}
 

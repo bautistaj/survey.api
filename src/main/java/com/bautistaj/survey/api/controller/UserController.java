@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,11 +63,33 @@ public class UserController {
 			return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
 		}
 		
-		user.setUpdatedAt(new Date());
-		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-		User userUpdated = this.userService.create(user);
+		User currentUser = userToUpdate.orElse(null);
+		
+		currentUser.setUpdatedAt(new Date());
+		
+		if(user.getPassword() != null) {
+			currentUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		}
+		
+		User userUpdated = this.userService.create(currentUser);
 		
 		return new ResponseEntity<User>(userUpdated, HttpStatus.OK);
+	}
+	
+	@PutMapping("/users/deactivate/{username}")
+	public ResponseEntity<?> deactivate(@PathVariable String username) {
+		LOGGER.debug("Deativate user");
+		
+		Map<String, String> response = new HashMap<>();
+		User user = this.userService.findByUsername(username);
+		
+		if(user != null) {
+			user.setActive(false);
+			this.userService.update(user);
+		}
+		
+		response.put("message", "User was deactivated");
+		return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/users/{id}")
@@ -88,5 +111,22 @@ public class UserController {
 		
 		response.put("message", MessageFormat.format("User with id:{0} was deleted", id));
 		return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/users/{id}")
+	public ResponseEntity<?> getBayId(@PathVariable Long id) {
+		Map<String, String> response = new HashMap<>();
+		Optional<User> optuser = this.userService.findById(id);
+		
+		if(!optuser.isPresent()) {
+			LOGGER.debug(MessageFormat.format("User with id:{0} no found", id));
+			response.put("message", String.format("User with id:{0} no found", id));
+			return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+		}
+		
+		User user = optuser.orElse(null);
+		user.setPassword(null);
+		
+		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 }

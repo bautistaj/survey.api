@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bautistaj.survey.api.model.Form;
+import com.bautistaj.survey.api.model.Survey;
+import com.bautistaj.survey.api.model.User;
 import com.bautistaj.survey.api.service.IFormService;
 
 @RestController
@@ -34,19 +36,19 @@ public class FormController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	@GetMapping("/forms/page/{page}")
-	public Page<Form> index(@PathVariable Integer page) {
+	@GetMapping("/surveys/page/{page}")
+	public Page<Survey> index(@PathVariable Integer page) {
 		return this.formService.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
 	}
 	
-	@PostMapping("/forms")
-	public ResponseEntity<Form> create(@RequestBody Form form) {
+	@PostMapping("/surveys")
+	public ResponseEntity<Survey> create(@RequestBody Survey form) {
 		form.setCreatedAt(new Date());
-		Form newForm = this.formService.create(form);
-		return new ResponseEntity<Form>(newForm, HttpStatus.CREATED);
+		Survey newForm = this.formService.create(form);
+		return new ResponseEntity<Survey>(newForm, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/forms/{id}")
+	@DeleteMapping("/surveys/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		Map<String, String> response = new HashMap<>();
 		
@@ -65,5 +67,21 @@ public class FormController {
 		
 		response.put("message", MessageFormat.format("Form with id:{0} was deleted", id));
 		return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/surveys/{id}")
+	public ResponseEntity<?> getBayId(@PathVariable Long id) {
+		Map<String, String> response = new HashMap<>();
+		Optional<Survey> optuser = this.formService.findById(id);
+		
+		if(!optuser.isPresent()) {
+			LOGGER.debug(MessageFormat.format("Survey with id:{0} no found", id));
+			response.put("message", String.format("Survey with id:{0} no found", id));
+			return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+		}
+		
+		Survey survey = optuser.orElse(null);
+		
+		return new ResponseEntity<Survey>(survey, HttpStatus.CREATED);
 	}
 }

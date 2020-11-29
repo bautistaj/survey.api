@@ -1,5 +1,6 @@
 package com.bautistaj.survey.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,4 +14,5 @@ public interface IPcBrandService {
 	public void deleteById(Long id);
 	public PcBrand update(PcBrand pcBrand);
 	public PcBrand create(PcBrand pcBrand);
+	public List<PcBrand> findAll();
 }

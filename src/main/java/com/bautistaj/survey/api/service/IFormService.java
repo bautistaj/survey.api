@@ -5,12 +5,12 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.bautistaj.survey.api.model.Form;
+import com.bautistaj.survey.api.model.Survey;
 
 public interface IFormService {
-	public Page<Form> findAll(Pageable pageable);
-	public Optional<Form> findById(Long id);
+	public Page<Survey> findAll(Pageable pageable);
+	public Optional<Survey> findById(Long id);
 	public void deleteById(Long id);
-	public Form update(Form form);
-	public Form create(Form form);
+	public Survey update(Survey form);
+	public Survey create(Survey form);
 }

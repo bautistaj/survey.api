@@ -2,7 +2,9 @@ package com.bautistaj.survey.api.controller;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,11 @@ public class PcBrandController {
 		return this.pcBrandService.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
 	}
 	
+	@GetMapping("/pcbrands")
+	public List<PcBrand> findAll() {
+		return this.pcBrandService.findAll();
+	}
+	
 	@DeleteMapping("/pcbrands/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		Map<String, String> response = new HashMap<>();
@@ -64,5 +71,19 @@ public class PcBrandController {
 	public ResponseEntity<PcBrand> create(@RequestBody PcBrand pcBrand) {
 		PcBrand newPcBrand = this.pcBrandService.create(pcBrand);
 		return new ResponseEntity<PcBrand>(newPcBrand, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/pcbrands/{id}")
+	public ResponseEntity<?> getBayId(@PathVariable Long id) {
+		Map<String, String> response = new HashMap<>();
+		Optional<PcBrand> pcBrand = this.pcBrandService.findById(id);
+		
+		if(!pcBrand.isPresent()) {
+			LOGGER.debug(MessageFormat.format("Brand with id:{0} no found", id));
+			response.put("message", String.format("Brand with id:{0} no found", id));
+			return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<PcBrand>(pcBrand.orElse(null), HttpStatus.CREATED);
 	}
 }

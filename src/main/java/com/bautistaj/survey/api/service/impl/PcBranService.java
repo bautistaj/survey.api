@@ -1,5 +1,6 @@
 package com.bautistaj.survey.api.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,11 @@ public class PcBranService implements IPcBrandService{
 	@Override
 	public PcBrand create(PcBrand pcBrand) {
 		return this.pcBrandRepository.save(pcBrand);
+	}
+
+	@Override
+	public List<PcBrand> findAll() {
+		return (List<PcBrand>) this.pcBrandRepository.findAll();
 	}
 
 }

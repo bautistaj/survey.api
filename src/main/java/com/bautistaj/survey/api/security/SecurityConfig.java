@@ -22,6 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtFilterRequest jwtFilterRequest;
 
+	private String[] patterns  = {"/**/**/**/authenticate","/**/**/**/users/deactivate/**" };
+	
 	@Bean
 	public PasswordEncoder passwordEcoder() {
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -35,8 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and();
-		http.csrf().disable().authorizeRequests().antMatchers("/**/**/**/authenticate").permitAll().anyRequest()
-				.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.csrf().disable().authorizeRequests()
+		.antMatchers(patterns)
+		.permitAll().anyRequest()
+		.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
@@ -46,5 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
+	
 
 }

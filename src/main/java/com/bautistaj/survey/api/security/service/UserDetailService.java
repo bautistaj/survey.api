@@ -18,7 +18,7 @@ public class UserDetailService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.bautistaj.survey.api.model.User user = this.userRepository.findByUsername(username);
+		com.bautistaj.survey.api.model.User user = this.userRepository.findByUsernameAndActive(username, true);
 		return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
 	}
 
